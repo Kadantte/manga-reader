@@ -1,6 +1,6 @@
 {
   "name": "quasar-manga-reader",
-  "version": "2.25.1",
+  "version": "2.26.0",
   "description": "Manga reader that scrapes manga sites for updates",
   "productName": "Manga Reader",
   "author": "Yentis#5218",
@@ -91,8 +91,8 @@
     "last 5 Opera versions"
   ],
   "engines": {
-    "node": ">= 10.18.1",
-    "npm": ">= 6.13.4",
-    "yarn": ">= 1.21.1"
-  }
+    "node": ">= 25.0.0",
+    "npm": ">= 11.6.2"
+  },
+  "packageManager": "yarn@4.11.0"
 }

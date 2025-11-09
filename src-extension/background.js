@@ -254,10 +254,10 @@ async function getCookies(request) {
   partitionArray.forEach((cookie) => {
     // @ts-expect-error partitionKey doesn't exist in the types
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-    const topLevelSite = cookie.partitionKey?.topLevelSite
+    const topLevelSite = cookie.partitionKey?.topLevelSite?.replace('www.', '');
     if (!topLevelSite) return
 
-    if (request.url.startsWith(topLevelSite)) {
+    if (request.url.replace('www.', '').startsWith(topLevelSite)) {
       cookieArray.push(cookie)
     }
   })
