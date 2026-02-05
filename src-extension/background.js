@@ -20,9 +20,10 @@ chrome.webRequest.onHeadersReceived.addListener(
   (details) => {
     const responseHeaders = details.responseHeaders ?? []
     responseListeners.forEach((listener) => listener(details.url, responseHeaders))
+    return undefined
   },
   FILTERS,
-  ['responseHeaders', 'extraHeaders']
+  ['responseHeaders', 'extraHeaders'],
 )
 
 chrome.webRequest.onBeforeSendHeaders.addListener(
@@ -33,7 +34,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
     return { requestHeaders }
   },
   FILTERS,
-  ['requestHeaders', 'extraHeaders', 'blocking']
+  ['requestHeaders', 'extraHeaders', 'blocking'],
 )
 
 chrome.runtime.onMessageExternal.addListener((request, _sender, sendResponse) => {
@@ -125,12 +126,14 @@ async function doRequest(request) {
     const promise = new Promise((resolve, reject) => {
       try {
         const reader = new FileReader()
-        reader.onload = () => { resolve(reader.result) }
+        reader.onload = () => {
+          resolve(reader.result)
+        }
         reader.readAsDataURL(blob)
-      } catch(e) {
-        reject(e);
+      } catch (e) {
+        reject(e)
       }
-    });
+    })
 
     const base64 = await promise
     data = base64.substring(base64.indexOf(',') + 1)
@@ -245,16 +248,13 @@ function setRequestHeaders(request, cookies) {
  * @returns {Promise<chrome.cookies.Cookie[]>}
  */
 async function getCookies(request) {
-  // @ts-expect-error partitionKey doesn't exist in the types
   const partitionCookies = getCookiesBase({ partitionKey: {} })
   const regularCookies = getCookiesBase({ url: request.url })
   const [partitionArray, cookieArray] = await Promise.all([partitionCookies, regularCookies])
 
   // topLevelSite filtering doesn't work so we do it manually
   partitionArray.forEach((cookie) => {
-    // @ts-expect-error partitionKey doesn't exist in the types
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-    const topLevelSite = cookie.partitionKey?.topLevelSite?.replace('www.', '');
+    const topLevelSite = cookie.partitionKey?.topLevelSite?.replace('www.', '')
     if (!topLevelSite) return
 
     if (request.url.replace('www.', '').startsWith(topLevelSite)) {

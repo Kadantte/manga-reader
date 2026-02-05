@@ -24,12 +24,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 import MangaHeader from '../components/Header.vue'
 import MangaItem from '../components/manga-item/MangaItem.vue'
-import useSettings from '../composables/useSettings'
-import useSearchValue from '../composables/useSearchValue'
-import useRefreshing from '../composables/useRefreshing'
 import { getSiteNameByUrl } from '../utils/siteUtils'
 import {
   useAppInitialized,
@@ -39,10 +36,11 @@ import {
 } from '../composables/useInitialized'
 import { getPlatform } from '../services/platformService'
 import { Platform } from '../enums/platformEnum'
-import { useStore } from '../store'
-import { Manga } from '../classes/manga'
+import type { Manga } from '../classes/manga'
 import { mangaSort } from '../services/sortService'
-import useMangaList from 'src/composables/useMangaList'
+import { stateManager } from 'src/store/store-reader'
+import { combineLatest, map } from 'rxjs'
+import { useObservable } from '@vueuse/rxjs'
 
 export default defineComponent({
   components: {
@@ -53,53 +51,51 @@ export default defineComponent({
   setup() {
     useAppInitialized()
 
-    const $store = useStore()
-    const { settings } = useSettings()
-    const { searchValue } = useSearchValue()
     const refreshProgress = ref(0)
-    const { refreshing } = useRefreshing(refreshProgress)
-    const { mangaMap } = useMangaList()
+    const { mangaMap$, settings$, searchValue$, refreshing$ } = stateManager
 
-    const mangaUrls = computed(() => {
-      const matchedManga: Manga[] = []
+    const mangaUrls$ = combineLatest([mangaMap$, settings$, searchValue$]).pipe(
+      map(([mangaMap, settings, searchValue]) => {
+        const matchedManga: Manga[] = []
 
-      mangaMap.value.forEach((manga) => {
-        if (!settings.value.filters.includes(manga.status)) return
+        mangaMap.forEach((manga) => {
+          if (!settings.filters.includes(manga.status)) return
 
-        const searchWords = searchValue.value.split(' ')
-        let title = true
-        let notes = true
-        let site = true
+          const searchWords = searchValue.split(' ')
+          let title = true
+          let notes = true
+          let site = true
 
-        const containsWords = searchWords.every((word) => {
-          const lowerCaseWord = word.toLowerCase()
+          const containsWords = searchWords.every((word) => {
+            const lowerCaseWord = word.toLowerCase()
 
-          if (!manga.title.toLowerCase().includes(lowerCaseWord)) {
-            title = false
-          }
+            if (!manga.title.toLowerCase().includes(lowerCaseWord)) {
+              title = false
+            }
 
-          if (manga.notes?.toLowerCase().includes(lowerCaseWord) !== true) {
-            notes = false
-          }
+            if (manga.notes?.toLowerCase().includes(lowerCaseWord) !== true) {
+              notes = false
+            }
 
-          const siteName = getSiteNameByUrl(manga.site)
-          if (siteName?.toLowerCase().includes(lowerCaseWord) !== true) {
-            site = false
-          }
+            const siteName = getSiteNameByUrl(manga.site)
+            if (siteName?.toLowerCase().includes(lowerCaseWord) !== true) {
+              site = false
+            }
 
-          return title || notes || site
+            return title || notes || site
+          })
+          if (!containsWords) return
+
+          matchedManga.push(manga)
         })
-        if (!containsWords) return
 
-        matchedManga.push(manga)
-      })
-
-      return matchedManga
-        .sort((a, b) => {
-          return mangaSort(a, b, $store.state.reader.settings.sortedBy)
-        })
-        .map((manga) => manga.url)
-    })
+        return matchedManga
+          .sort((a, b) => {
+            return mangaSort(a, b, settings.sortedBy)
+          })
+          .map((manga) => manga.url)
+      }),
+    )
 
     switch (getPlatform()) {
       case Platform.Capacitor:
@@ -114,8 +110,8 @@ export default defineComponent({
     }
 
     return {
-      mangaUrls,
-      refreshing,
+      mangaUrls: useObservable(mangaUrls$),
+      refreshing: useObservable(refreshing$),
       refreshProgress,
     }
   },

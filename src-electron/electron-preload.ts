@@ -1,6 +1,7 @@
-import { contextBridge, ipcRenderer, IpcRendererEvent, shell } from 'electron'
-import HttpRequest from 'src/interfaces/httpRequest'
-import qs from 'qs'
+import type { IpcRendererEvent } from 'electron'
+import { contextBridge, ipcRenderer, shell } from 'electron'
+import type { HttpRequest } from 'src/interfaces/httpRequest'
+import type qs from 'qs'
 
 const whitelist = ['http://localhost', 'file:///', 'dropbox.com/oauth2/authorize']
 
