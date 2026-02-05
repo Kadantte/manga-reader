@@ -78,7 +78,10 @@ export default defineComponent({
             }
 
             const siteName = getSiteNameByUrl(manga.site)
-            if (siteName?.toLowerCase().includes(lowerCaseWord) !== true) {
+            if (
+              siteName?.toLowerCase().includes(lowerCaseWord) !== true &&
+              !manga.site.replace('.', '').includes(lowerCaseWord)
+            ) {
               site = false
             }
 
