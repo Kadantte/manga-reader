@@ -156,7 +156,7 @@ export function mangaEqual(actual: Manga | Error, desired: Manga, options?: Equa
   }
 }
 
-export async function searchValid(results: Manga[], desired: Manga, query: string): Promise<void> {
+export async function searchValid(results: Manga[], desired: Manga, query: string = desired.title): Promise<void> {
   const matchingManga = results.filter((manga) => {
     if (manga.site !== desired.site) {
       console.error(`Site did not match: ${manga.site} | ${desired.site}`)
