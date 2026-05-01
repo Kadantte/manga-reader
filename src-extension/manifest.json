@@ -4,21 +4,13 @@
   "name": "Manga Reader",
   "description": "Extension to support usage of the browser version of Yentis' Manga Reader",
   "author": "Yentis#5218",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "background": {
     "service_worker": "background.js"
   },
-  "permissions": [
-    "webRequest",
-    "webRequestBlocking",
-    "*://*/*",
-    "cookies"
-  ],
+  "permissions": ["webRequest", "webRequestBlocking", "*://*/*", "cookies"],
   "externally_connectable": {
-    "matches": [
-      "https://yentis.github.io/*",
-      "http://localhost/*"
-    ]
+    "matches": ["https://yentis.github.io/*", "http://localhost/*"]
   },
   "icons": {
     "16": "icon16.png",

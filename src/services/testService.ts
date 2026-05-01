@@ -4,7 +4,6 @@ import { LinkingSiteType } from 'src/enums/linkingSiteEnum'
 import { SiteType } from 'src/enums/siteEnum'
 import { getMangaInfoByUrl } from './siteService'
 import { testAsuraScans } from './test/asurascans'
-import { testLikeManga } from './test/likemanga'
 import { testFlameComics } from './test/flamecomics'
 import { testHiperDEX } from './test/hiperdex'
 import { testMangaDex } from './test/mangadex'
@@ -46,11 +45,6 @@ export default async function testAll(
   promises.push(
     testCubari().catch((error) => {
       errors.push({ site: SiteType.Cubari, error: error })
-    }),
-  )
-  promises.push(
-    testLikeManga().catch((error) => {
-      errors.push({ site: SiteType.LikeManga, error: error })
     }),
   )
   promises.push(

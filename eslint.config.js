@@ -52,6 +52,7 @@ export default defineConfigWithVueTs(
           allow: ['warn', 'error', 'info', 'debug'],
         },
       ],
+      'no-debugger': 'warn',
 
       '@typescript-eslint/no-shadow': 'warn',
       '@typescript-eslint/switch-exhaustiveness-check': 'error',

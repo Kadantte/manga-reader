@@ -39,6 +39,8 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 
 chrome.runtime.onMessageExternal.addListener((request, _sender, sendResponse) => {
   onRequest(request, sendResponse)
+
+  return true
 })
 
 /**
@@ -140,8 +142,6 @@ async function doRequest(request) {
   } else {
     data = await response.text()
   }
-
-  console.log(data)
 
   return {
     headers: headerRecord,
