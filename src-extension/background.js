@@ -257,7 +257,7 @@ async function getCookies(request) {
     const topLevelSite = cookie.partitionKey?.topLevelSite?.replace('www.', '')
     if (!topLevelSite) return
 
-    if (request.url.replace('www.', '').startsWith(topLevelSite)) {
+    if (request.url.replace('www.', '').includes(topLevelSite)) {
       cookieArray.push(cookie)
     }
   })
