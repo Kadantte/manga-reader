@@ -14,7 +14,7 @@ const responseListeners = new Map()
 /** @type {HttpListener} */
 const requestListeners = new Map()
 
-let cookieNames = ['cf_clearance', '__ddg1', '__ddg2', '__ddgid', '__ddgmark']
+let cookieNames = ['cf_clearance', '__ddg1', '__ddg2', '__ddgid', '__ddgmark', '__st']
 
 chrome.webRequest.onHeadersReceived.addListener(
   (details) => {

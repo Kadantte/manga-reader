@@ -64,7 +64,6 @@ import { testWebtoons } from '../services/test/webtoons'
 import { testFlameComics } from '../services/test/flamecomics'
 import { useQuasar } from 'quasar'
 import { LinkingSiteType } from '../enums/linkingSiteEnum'
-import { testResetScans } from '../services/test/resetscans'
 import { testKitsu } from '../services/test/kitsu'
 import { testCubari } from '../services/test/cubari'
 import { testTapas } from 'src/services/test/tapas'
@@ -170,9 +169,6 @@ export default defineComponent({
           break
         case SiteType.Mangakakalot:
           await doTest(testMangakakalot)
-          break
-        case SiteType.ResetScans:
-          await doTest(testResetScans)
           break
         case SiteType.Tapas:
           await doTest(testTapas)

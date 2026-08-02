@@ -159,7 +159,7 @@ app.on('activate', () => {
   }
 })
 
-const COOKIE_NAMES = ['cf_clearance', '__ddg1', '__ddg2', '__ddgid', '__ddgmark']
+const COOKIE_NAMES = ['cf_clearance', '__ddg1', '__ddg2', '__ddgid', '__ddgmark', '__st']
 
 ipcMain.handle('net-request', async (_event, options: HttpRequest): Promise<HttpResponse> => {
   await app.whenReady()
