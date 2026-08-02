@@ -179,7 +179,6 @@ export default defineComponent({
         case SiteType.Webtoons:
           await doTest(testWebtoons)
           break
-        case LinkingSiteType.MangaDex:
         case undefined:
           break
       }

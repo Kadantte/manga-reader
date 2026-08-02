@@ -39,10 +39,7 @@ const siteMap = new Map<string, BaseSite>([
   [SiteType.Tappytoon, new TappyToon()],
   [SiteType.Kagane, new Kagane()],
 ])
-const linkingSiteMap = new Map<string, BaseSite>([
-  [LinkingSiteType.MangaDex, mangaDex],
-  [LinkingSiteType.Kitsu, new Kitsu()],
-])
+const linkingSiteMap = new Map<string, BaseSite>([[LinkingSiteType.Kitsu, new Kitsu()]])
 function createRace(promise: Promise<Error | Manga[]>): Promise<Error | Manga[]> {
   const timeoutPromise = new Promise<Error | Manga[]>((resolve) => setTimeout(() => resolve(Error('Timed out')), 10000))
   return Promise.race([promise, timeoutPromise])
